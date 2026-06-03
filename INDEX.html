@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>나의 플래너 🌿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lime:#6FCF2D;--lime-d:#4EA818;--lime-s:#EEFAD5;
+  --sun:#FFD93D;--sun-s:#FFF8D0;
+  --coral:#FF6B6B;--coral-s:#FFE8E8;
+  --mint:#38D9A9;--mint-s:#D3F9EF;
+  --paper:#F7FEF0;--card:#FFFFFF;
+  --ink:#1E3A1E;--ink-s:#4A6849;--muted:#8EA88C;--line:#E4F0D8;
+  --sh:0 2px 12px -4px rgba(30,58,30,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overscroll-behavior:none;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
+  background-image:radial-gradient(ellipse at 10% 0%,rgba(111,207,45,.10),transparent 50%),
+    radial-gradient(ellipse at 90% 100%,rgba(255,217,61,.12),transparent 50%);
+  color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:80px;min-height:100%;}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px;}
+
+/* header */
+.hdr{padding:26px 16px 10px;max-width:520px;margin:0 auto;}
+.hdr-date{font-size:12px;color:var(--lime-d);font-weight:700;letter-spacing:.5px;margin-bottom:2px;}
+.hdr-title{font-family:'Jua',sans-serif;font-size:25px;color:var(--ink);}
+
+/* tabs */
+.tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;
+  border-top:1.5px solid var(--line);box-shadow:0 -4px 20px -8px rgba(30,58,30,.15);
+  z-index:50;padding-bottom:env(safe-area-inset-bottom);}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:10px 0 9px;cursor:pointer;color:var(--muted);font-size:10.5px;font-weight:500;}
+.tab .ico{font-size:20px;transition:.15s;}
+.tab.on{color:var(--lime-d);}
+.tab.on .ico{transform:scale(1.15);}
+
+/* section */
+.sec{display:flex;align-items:center;gap:8px;margin:22px 0 12px;
+  font-family:'Jua',sans-serif;font-size:16px;color:var(--ink);}
+.sec::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,var(--line),transparent);}
+.sec small{font-family:'Noto Sans KR';font-size:11px;font-weight:400;color:var(--muted);}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;
+  background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+  padding:10px 12px;box-shadow:var(--sh);margin-bottom:4px;}
+.nav .range{font-family:'Jua',sans-serif;font-size:16px;}
+.nav .meta{font-size:11px;color:var(--muted);margin-top:1px;}
+.navbtn{width:36px;height:36px;border-radius:12px;border:1.5px solid var(--line);
+  background:var(--paper);color:var(--ink-s);font-size:16px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.navbtn:active{background:var(--lime-s);}
+.today-btn{display:block;margin:8px auto 0;border:none;background:none;
+  color:var(--lime-d);font-size:11.5px;font-weight:700;cursor:pointer;}
+
+/* monthly goal card */
+.gcard{background:var(--card);border:1.5px solid var(--line);border-radius:22px;
+  margin-bottom:14px;box-shadow:var(--sh);overflow:hidden;animation:pop .25s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.gcard-top{padding:4px 16px 0;display:flex;align-items:center;gap:6px;
+  border-bottom:1px solid var(--line);padding-bottom:10px;margin-top:12px;}
+.gname{font-family:'Jua',sans-serif;font-size:17px;outline:none;flex:1;}
+.gname:empty:before{content:'목표 이름';color:var(--muted);}
+.gunit{font-size:12px;color:var(--muted);background:var(--paper);border:1px solid var(--line);
+  border-radius:8px;padding:3px 8px;outline:none;min-width:20px;}
+.gdel{font-size:18px;color:var(--muted);cursor:pointer;opacity:.4;}
+.gcard-set{display:flex;align-items:center;gap:8px;padding:10px 16px;
+  font-size:12px;color:var(--ink-s);border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.gcard-set input{border:1.5px solid var(--line);border-radius:10px;
+  padding:6px 8px;font-size:13px;font-family:'Noto Sans KR';outline:none;background:var(--paper);}
+.gcard-set input:focus{border-color:var(--lime);}
+.gcard-set input.w80{width:80px;}
+.gcard-set input.w56{width:56px;}
+.gstats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);}
+.gstat{background:var(--card);padding:10px 14px;}
+.gstat .t{font-size:10.5px;color:var(--muted);margin-bottom:3px;}
+.gstat .v{font-family:'Jua',sans-serif;font-size:14px;}
+.gstat.hi .v{color:var(--coral);}
+.gstat.go .v{color:var(--lime-d);}
+.pbar-wrap{padding:10px 16px 6px;border-top:1px solid var(--line);}
+.pbar{height:8px;border-radius:6px;background:var(--line);overflow:hidden;}
+.pbar i{display:block;height:100%;border-radius:6px;
+  background:linear-gradient(90deg,var(--lime),var(--lime-d));transition:width .5s cubic-bezier(.34,1.56,.64,1);}
+.pct-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;}
+
+/* log section in goal card */
+.log-sec{padding:12px 16px;background:var(--paper);border-top:1px solid var(--line);}
+.log-sec .lhd{font-size:12px;font-weight:700;color:var(--ink-s);margin-bottom:9px;}
+.log-row{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap;}
+.log-row input[type=date]{border:1.5px solid var(--line);border-radius:10px;
+  padding:7px 9px;font-size:13px;font-family:'Noto Sans KR';outline:none;background:var(--card);color:var(--ink);}
+.log-row input[type=number]{width:90px;border:1.5px solid var(--line);border-radius:10px;
+  padding:7px 9px;font-size:13px;font-family:'Noto Sans KR';outline:none;text-align:right;background:var(--card);}
+.log-row input:focus{border-color:var(--lime);}
+.log-row .lunit{font-size:12px;color:var(--muted);}
+.log-save{border:none;background:var(--lime);color:#fff;border-radius:10px;
+  padding:8px 16px;font-size:13px;font-weight:700;font-family:'Noto Sans KR';cursor:pointer;}
+.log-save:active{background:var(--lime-d);}
+.log-history{display:flex;flex-direction:column;gap:5px;max-height:140px;overflow-y:auto;}
+.lhitem{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:7px 11px;font-size:13px;}
+.lhitem .lhdate{color:var(--muted);font-size:11.5px;flex:none;}
+.lhitem .lhval{flex:1;font-weight:700;}
+.lhitem .lhdel{color:var(--muted);cursor:pointer;font-size:15px;opacity:.5;}
+
+/* add goal btns */
+.add-goal-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.add-goal-btn{flex:1;min-width:80px;border:2px dashed var(--line);background:rgba(255,255,255,.7);
+  border-radius:16px;padding:12px 8px;font-size:12.5px;font-weight:700;color:var(--lime-d);
+  font-family:'Noto Sans KR';cursor:pointer;}
+.add-goal-btn:active{background:var(--lime-s);}
+
+/* weekly habit */
+.habit{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+  padding:14px 14px 12px;margin-bottom:10px;box-shadow:var(--sh);animation:pop .2s ease;}
+.habit-top{display:flex;align-items:center;gap:8px;margin-bottom:11px;}
+.htx{flex:1;font-size:15px;font-weight:500;outline:none;min-height:20px;}
+.htx:empty:before{content:'주간 목표 입력';color:var(--muted);font-weight:400;}
+.hcnt{font-size:12px;font-weight:700;background:var(--lime-s);color:var(--lime-d);padding:3px 9px;border-radius:20px;}
+.hcnt.full{background:var(--mint-s);color:#0B8F6A;}
+.hdel{font-size:18px;color:var(--muted);cursor:pointer;opacity:.4;}
+.days{display:flex;gap:5px;}
+.day{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;
+  cursor:pointer;border-radius:10px;padding:4px 0 5px;}
+.day .dow{font-size:10px;color:var(--muted);font-weight:700;}
+.day.sun .dow{color:var(--coral);}
+.day.today-col{background:var(--sun-s);}
+.dbox{width:28px;height:28px;border-radius:9px;border:2px solid var(--line);
+  background:var(--paper);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
+.day.checked .dbox{background:var(--lime);border-color:var(--lime);transform:scale(1.05);}
+.day:active .dbox{transform:scale(.88);}
+.add-habit{width:100%;border:2px dashed var(--line);background:rgba(255,255,255,.6);
+  border-radius:16px;padding:13px;font-size:13px;font-weight:700;color:var(--lime-d);
+  font-family:'Noto Sans KR';cursor:pointer;}
+.add-habit:active{background:var(--lime-s);}
+
+/* daily todo */
+.quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.qbtn{border:2px solid var(--lime);background:var(--lime-s);border-radius:20px;
+  padding:7px 14px;font-size:13px;font-weight:700;color:var(--lime-d);cursor:pointer;}
+.qbtn:active{background:var(--lime);color:#fff;transform:scale(.95);}
+.qbtn.y{border-color:var(--sun);background:var(--sun-s);color:#9A6F00;}
+.todo{display:flex;align-items:center;gap:10px;background:var(--card);
+  border:1.5px solid var(--line);border-radius:14px;padding:12px 13px;
+  margin-bottom:8px;box-shadow:var(--sh);animation:pop .2s ease;}
+.tck{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex:none;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#fff;transition:.12s;}
+.todo.done .tck{background:var(--mint);border-color:var(--mint);}
+.todo.done .ttx{color:var(--muted);text-decoration:line-through;}
+.ttx{flex:1;font-size:14.5px;line-height:1.4;}
+.tdel{color:var(--muted);font-size:18px;cursor:pointer;opacity:.4;}
+.add-row{display:flex;gap:8px;margin-top:4px;}
+.add-row input{flex:1;border:2px solid var(--line);background:var(--card);
+  border-radius:14px;padding:13px 14px;font-size:14.5px;font-family:'Noto Sans KR';outline:none;}
+.add-row input:focus{border-color:var(--lime);}
+.add-row button{border:none;background:var(--lime);color:#fff;border-radius:14px;
+  padding:0 20px;font-size:22px;cursor:pointer;}
+.add-row button:active{background:var(--lime-d);}
+
+/* empty */
+.empty{text-align:center;color:var(--muted);padding:28px 0;
+  border:2px dashed var(--line);border-radius:16px;margin-bottom:10px;}
+.empty .etit{font-family:'Jua',sans-serif;font-size:15px;color:var(--ink-s);margin-bottom:5px;}
+.loading{text-align:center;color:var(--muted);padding:50px 0;font-size:13px;}
+.toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(16px);
+  background:var(--ink);color:#fff;padding:11px 20px;border-radius:22px;font-size:13px;
+  opacity:0;transition:.25s;z-index:60;pointer-events:none;}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-date" id="hdrDate"></div>
+  <div class="hdr-title">🌿 나의 플래너</div>
+</div>
+<div id="panel"><div class="loading">불러오는 중 🌱</div></div>
+<nav class="tabs">
+  <div class="tab on" data-t="monthly"><span class="ico">🎯</span>월간 목표</div>
+  <div class="tab" data-t="weekly"><span class="ico">📅</span>주간 목표</div>
+  <div class="tab" data-t="daily"><span class="ico">✅</span>오늘 할 일</div>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script>
+const store = {
+  async get(key) {
+    const v = localStorage.getItem(key);
+    return v ? {value: v} : null;
+  },
+  async set(key, value) {
+    localStorage.setItem(key, value);
+    return {key, value};
+  }
+};
+const DOW=['월','화','수','목','금','토','일'];
+const QUICK=['독서 30분','일기 쓰기','운동','줄넘기'];
+let tab='monthly';
+let monthRef=startOfMonth(new Date());
+let weekMon=getMonday(new Date());
+const todayISO=iso(new Date());
+const goalCache={},habitCache={},todoCache={};
+
+function iso(d){return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function p(n){return String(n).padStart(2,'0');}
+function ym(d){return d.getFullYear()+'-'+p(d.getMonth()+1);}
+function ymOf(s){return s.slice(0,7);}
+function startOfMonth(d){return new Date(d.getFullYear(),d.getMonth(),1);}
+function addMonths(d,n){return new Date(d.getFullYear(),d.getMonth()+n,1);}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function getMonday(d){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());const dy=x.getDay();x.setDate(x.getDate()+(dy===0?-6:1-dy));return x;}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function fmt(n,unit){n=+n||0;if(unit&&unit.includes('원'))return Math.round(n).toLocaleString('ko-KR');return(Math.round(n*10)/10).toLocaleString('ko-KR');}
+function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1600);}
+
+async function ensureGoals(k){
+  if(goalCache[k])return goalCache[k];
+  try{const r=await store.get('g:'+k);goalCache[k]=r?JSON.parse(r.value):[];}catch(e){goalCache[k]=[];}
+  if(!Array.isArray(goalCache[k]))goalCache[k]=[];
+  if(!goalCache[k].length&&k===ym(new Date())){
+    goalCache[k]=[
+      {id:uid(),name:'러닝 마일리지',unit:'km',target:100,targetDays:22,logs:{}},
+      {id:uid(),name:'매출',unit:'원',target:0,targetDays:25,logs:{}},
+    ];
+    await saveGoals(k);
+  }
+  return goalCache[k];
+}
+async function saveGoals(k){try{await store.set('g:'+k,JSON.stringify(goalCache[k]));}catch(e){toast('저장 실패');}}
+async function ensureHabits(){
+  const k=iso(weekMon);
+  if(habitCache[k])return habitCache[k];
+  try{const r=await store.get('h:'+k);habitCache[k]=r?JSON.parse(r.value):[];}catch(e){habitCache[k]=[];}
+  if(!Array.isArray(habitCache[k]))habitCache[k]=[];
+  if(!habitCache[k].length){
+    habitCache[k]=[{id:uid(),text:'독서',checks:[0,0,0,0,0,0,0]},{id:uid(),text:'운동',checks:[0,0,0,0,0,0,0]},{id:uid(),text:'줄넘기',checks:[0,0,0,0,0,0,0]}];
+    await saveHabits();
+  }
+  return habitCache[k];
+}
+async function saveHabits(){const k=iso(weekMon);try{await store.set('h:'+k,JSON.stringify(habitCache[k]));}catch(e){toast('저장 실패');}}
+async function ensureTodos(){
+  if(todoCache[todayISO])return todoCache[todayISO];
+  try{const r=await store.get('t:'+todayISO);todoCache[todayISO]=r?JSON.parse(r.value):[];}catch(e){todoCache[todayISO]=[];}
+  if(!Array.isArray(todoCache[todayISO]))todoCache[todayISO]=[];
+  return todoCache[todayISO];
+}
+async function saveTodos(){try{await store.set('t:'+todayISO,JSON.stringify(todoCache[todayISO]));}catch(e){toast('저장 실패');}}
+
+function goalStats(g,mk){
+  const logs=Object.entries(g.logs||{}).filter(([d])=>ymOf(d)===mk);
+  const 달성=logs.reduce((s,[,v])=>s+(+v||0),0);
+  const 완료=logs.filter(([,v])=>+v>0).length;
+  const t=+g.target||0,td=+g.targetDays||30;
+  const 남은=Math.max(0,t-달성);
+  const 남은일=Math.max(1,td-완료);
+  const 일일=Math.round(남은/남은일*10)/10;
+  return{달성,완료,남은,남은일,일일,주간:Math.round(일일*7*10)/10,pct:t?Math.min(100,Math.round(달성/t*100)):0};
+}
+
+function logHistory(g,mk){
+  return Object.entries(g.logs||{})
+    .filter(([d])=>ymOf(d)===mk&&+g.logs[d]>0)
+    .sort(([a],[b])=>b.localeCompare(a))
+    .slice(0,10);
+}
+
+async function render(){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.t===tab));
+  const p=document.getElementById('panel');
+  p.innerHTML='<div class="loading">불러오는 중 🌱</div>';
+  if(tab==='monthly')await renderMonthly(p);
+  else if(tab==='weekly')await renderWeekly(p);
+  else await renderDaily(p);
+}
+
+/* ── MONTHLY ── */
+async function renderMonthly(p){
+  const mk=ym(monthRef);
+  const goals=await ensureGoals(mk);
+  const cards=goals.map(g=>{
+    const s=goalStats(g,mk);
+    const hist=logHistory(g,mk);
+    const histHTML=hist.map(([d,v])=>`
+      <div class="lhitem">
+        <span class="lhdate">${d.slice(5).replace('-','/')}</span>
+        <span class="lhval">${fmt(v,g.unit)} ${esc(g.unit||'')}</span>
+        <span class="lhdel" data-gid="${g.id}" data-d="${d}">×</span>
+      </div>`).join('');
+    return`<div class="gcard">
+      <div class="gcard-top">
+        <div class="gname" contenteditable="true" data-gid="${g.id}" data-f="name">${esc(g.name)}</div>
+        <div class="gunit" contenteditable="true" data-gid="${g.id}" data-f="unit">${esc(g.unit||'')}</div>
+        <span class="gdel" data-gid="${g.id}">×</span>
+      </div>
+      <div class="gcard-set">
+        이번 달 목표 <input type="number" inputmode="decimal" class="w80" value="${g.target||''}" placeholder="0" data-tg="${g.id}" data-f="target"> ${esc(g.unit||'')}
+        &nbsp;/&nbsp; 목표일수 <input type="number" inputmode="decimal" class="w56" value="${g.targetDays||''}" placeholder="일" data-tg="${g.id}" data-f="targetDays"> 일
+      </div>
+      <div class="gstats">
+        <div class="gstat"><div class="t">이번달 달성</div><div class="v">${fmt(s.달성,g.unit)} ${esc(g.unit||'')}</div></div>
+        <div class="gstat hi"><div class="t">남은 목표</div><div class="v">${fmt(s.남은,g.unit)} ${esc(g.unit||'')}</div></div>
+        <div class="gstat"><div class="t">완료한 날수</div><div class="v">${s.완료}일 / ${g.targetDays||'?'}일</div></div>
+        <div class="gstat"><div class="t">남은 목표일수</div><div class="v">${s.남은일}일</div></div>
+        <div class="gstat go"><div class="t">조정 일일 권장</div><div class="v">${fmt(s.일일,g.unit)} ${esc(g.unit||'')}</div></div>
+        <div class="gstat go"><div class="t">조정 주간 권장</div><div class="v">${fmt(s.주간,g.unit)} ${esc(g.unit||'')}</div></div>
+      </div>
+      <div class="pbar-wrap">
+        <div class="pbar"><i style="width:${s.pct}%"></i></div>
+        <div class="pct-row"><span>${s.달성?fmt(s.달성,g.unit)+' '+esc(g.unit||''):'아직 기록 없음'}</span><span style="font-weight:700;color:var(--lime-d)">${s.pct}%</span></div>
+      </div>
+      <div class="log-sec">
+        <div class="lhd">📝 날짜별 기록 (과거 날짜도 입력 가능)</div>
+        <div class="log-row">
+          <input type="date" class="ldate" data-gid="${g.id}" value="${todayISO}">
+          <input type="number" inputmode="decimal" class="lval" data-gid="${g.id}" placeholder="0">
+          <span class="lunit">${esc(g.unit||'')}</span>
+          <button class="log-save" data-gid="${g.id}">저장</button>
+        </div>
+        ${hist.length?`<div class="log-history">${histHTML}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  p.innerHTML=`<div class="wrap">
+    <div class="nav">
+      <button class="navbtn" data-mn="-1">‹</button>
+      <div class="lbl"><div class="range">${monthRef.getFullYear()}년 ${monthRef.getMonth()+1}월</div>
+      <div class="meta">목표일수는 달마다 직접 설정</div></div>
+      <button class="navbtn" data-mn="1">›</button>
+    </div>
+    <button class="today-btn" id="mToday">이번 달로</button>
+    <div class="sec">🎯 월간 숫자 목표</div>
+    ${cards||'<div class="empty"><div class="etit">아래에서 목표를 추가하세요 🌱</div></div>'}
+    <div class="add-goal-btns">
+      <button class="add-goal-btn" data-add="러닝 마일리지|km">🏃 러닝</button>
+      <button class="add-goal-btn" data-add="매출|원">💰 매출</button>
+      <button class="add-goal-btn" data-add="|">+ 직접 추가</button>
+    </div>
+  </div>`;
+  bindMonthly(mk);
+}
+
+function bindMonthly(mk){
+  document.querySelectorAll('[data-mn]').forEach(b=>b.onclick=()=>{monthRef=addMonths(monthRef,+b.dataset.mn);render();});
+  document.getElementById('mToday')?.addEventListener('click',()=>{monthRef=startOfMonth(new Date());render();});
+  // name/unit edit
+  document.querySelectorAll('[data-gid][data-f]').forEach(el=>{
+    if(el.tagName==='DIV')el.onblur=async()=>{const g=goalCache[mk].find(x=>x.id===el.dataset.gid);if(g){g[el.dataset.f]=el.textContent.trim();await saveGoals(mk);}};
+  });
+  // target/targetDays
+  document.querySelectorAll('[data-tg]').forEach(inp=>{
+    inp.onchange=async()=>{const g=goalCache[mk].find(x=>x.id===inp.dataset.tg);if(g){g[inp.dataset.f]=parseFloat(inp.value)||0;await saveGoals(mk);render();}};
+  });
+  // date input → auto-fill value
+  document.querySelectorAll('.ldate').forEach(inp=>{
+    inp.onchange=()=>{
+      const g=goalCache[mk].find(x=>x.id===inp.dataset.gid);if(!g)return;
+      const d=inp.value;
+      const val=g.logs&&g.logs[d]?g.logs[d]:'';
+      const vInp=inp.closest('.log-row').querySelector('.lval');
+      if(vInp)vInp.value=val;
+    };
+  });
+  // save log
+  document.querySelectorAll('.log-save').forEach(btn=>{
+    btn.onclick=async()=>{
+      const g=goalCache[mk].find(x=>x.id===btn.dataset.gid);if(!g)return;
+      const row=btn.closest('.log-row');
+      const d=row.querySelector('.ldate').value;
+      const v=parseFloat(row.querySelector('.lval').value)||0;
+      if(!d){toast('날짜를 선택해주세요');return;}
+      if(!g.logs)g.logs={};
+      if(v>0)g.logs[d]=v;else delete g.logs[d];
+      await saveGoals(mk);toast('저장됐어요 ✓');render();
+    };
+  });
+  // delete log
+  document.querySelectorAll('.lhdel').forEach(el=>{
+    el.onclick=async()=>{const g=goalCache[mk].find(x=>x.id===el.dataset.gid);if(g&&g.logs){delete g.logs[el.dataset.d];await saveGoals(mk);render();}};
+  });
+  // delete goal
+  document.querySelectorAll('.gdel').forEach(el=>{
+    if(!el.dataset.gid)return;
+    el.onclick=async()=>{goalCache[mk]=goalCache[mk].filter(x=>x.id!==el.dataset.gid);await saveGoals(mk);render();};
+  });
+  // add goal
+  document.querySelectorAll('[data-add]').forEach(b=>b.onclick=async()=>{
+    const[name,unit]=b.dataset.add.split('|');
+    goalCache[mk].push({id:uid(),name,unit,target:0,targetDays:0,logs:{}});
+    await saveGoals(mk);render();
+  });
+}
+
+/* ── WEEKLY ── */
+async function renderWeekly(p){
+  const sun=addDays(weekMon,6);
+  const habits=await ensureHabits();
+  const tc=todayCol();
+  const cards=habits.map(h=>{
+    const cnt=h.checks.filter(Boolean).length;
+    const days=h.checks.map((on,i)=>`
+      <div class="day ${on?'checked':''} ${i===6?'sun':''} ${i===tc?'today-col':''}" data-hid="${h.id}" data-i="${i}">
+        <span class="dow">${DOW[i]}</span>
+        <span class="dbox">${on?'✓':''}</span>
+      </div>`).join('');
+    return`<div class="habit">
+      <div class="habit-top">
+        <div class="htx" contenteditable="true" data-hid="${h.id}">${esc(h.text)}</div>
+        <span class="hdel" data-hid="${h.id}">×</span>
+      </div>
+      <div class="days">${days}</div>
+    </div>`;
+  }).join('');
+  p.innerHTML=`<div class="wrap">
+    <div class="nav">
+      <button class="navbtn" data-wn="-1">‹</button>
+      <div class="lbl"><div class="range">${weekMon.getMonth()+1}.${weekMon.getDate()} – ${sun.getMonth()+1}.${sun.getDate()}</div>
+      <div class="meta">${weekMon.getFullYear()}년</div></div>
+      <button class="navbtn" data-wn="1">›</button>
+    </div>
+    <button class="today-btn" id="wkToday">이번 주로</button>
+    <div class="sec">📅 이번 주 습관 체크</div>
+    ${habits.length?cards:'<div class="empty"><div class="etit">이번 주 습관을 추가해보세요 🌿</div></div>'}
+    <button class="add-habit" id="addHabit">+ 습관 추가</button>
+  </div>`;
+  bindWeekly();
+}
+function todayCol(){for(let i=0;i<7;i++)if(iso(addDays(weekMon,i))===todayISO)return i;return -1;}
+function bindWeekly(){
+  document.querySelectorAll('[data-wn]').forEach(b=>b.onclick=()=>{weekMon=addDays(weekMon,7*+b.dataset.wn);render();});
+  document.getElementById('wkToday')?.addEventListener('click',()=>{weekMon=getMonday(new Date());render();});
+  const k=iso(weekMon);
+  document.querySelectorAll('.day').forEach(el=>el.onclick=async()=>{
+    const h=habitCache[k].find(x=>x.id===el.dataset.hid);
+    if(h){h.checks[+el.dataset.i]=!h.checks[+el.dataset.i];await saveHabits();render();}
+  });
+  document.querySelectorAll('.htx').forEach(el=>el.onblur=async()=>{
+    const h=habitCache[k].find(x=>x.id===el.dataset.hid);if(h){h.text=el.textContent.trim();await saveHabits();}
+  });
+  document.querySelectorAll('.hdel').forEach(el=>el.onclick=async()=>{
+    habitCache[k]=habitCache[k].filter(x=>x.id!==el.dataset.hid);await saveHabits();render();
+  });
+  document.getElementById('addHabit')?.addEventListener('click',async()=>{
+    habitCache[k].push({id:uid(),text:'',checks:[0,0,0,0,0,0,0]});
+    await saveHabits();render();
+    setTimeout(()=>{const e=document.querySelectorAll('.htx');e.length&&e[e.length-1].focus();},30);
+  });
+}
+
+/* ── DAILY ── */
+async function renderDaily(p){
+  const todos=await ensureTodos();
+  const done=todos.filter(t=>t.done).length;
+  const undone=todos.filter(t=>!t.done);
+  const doneList=todos.filter(t=>t.done);
+  const todoHTML=[...undone,...doneList].map(t=>`
+    <div class="todo ${t.done?'done':''}" >
+      <div class="tck" data-id="${t.id}">${t.done?'✓':''}</div>
+      <div class="ttx">${esc(t.text)}</div>
+      <div class="tdel" data-id="${t.id}">×</div>
+    </div>`).join('');
+  p.innerHTML=`<div class="wrap">
+    <div class="sec">✅ 오늘 할 일 <small>${done>0?done+'개 완료':''}</small></div>
+    <div class="quick-row">
+      ${QUICK.map(q=>`<button class="qbtn" data-q="${q}">+ ${q}</button>`).join('')}
+      <button class="qbtn y" id="qCustom">+ 직접 입력</button>
+    </div>
+    ${todoHTML||'<div class="empty"><div class="etit">오늘 할 일을 추가해봐요 ☀️</div><div>위 버튼을 탭하거나 직접 입력해요</div></div>'}
+    <div class="add-row">
+      <input id="newTodo" placeholder="할 일 추가하기...">
+      <button id="addTodo">+</button>
+    </div>
+  </div>`;
+  bindDaily();
+}
+function bindDaily(){
+  document.querySelectorAll('.qbtn:not(.y)').forEach(b=>b.onclick=async()=>{
+    if(todoCache[todayISO].some(t=>t.text===b.dataset.q&&!t.done)){toast('이미 있어요!');return;}
+    todoCache[todayISO].push({id:uid(),text:b.dataset.q,done:false});
+    await saveTodos();render();
+  });
+  document.getElementById('qCustom')?.addEventListener('click',()=>document.getElementById('newTodo')?.focus());
+  document.querySelectorAll('.tck').forEach(el=>el.onclick=async()=>{
+    const t=todoCache[todayISO].find(x=>x.id===el.dataset.id);if(t){t.done=!t.done;await saveTodos();render();}
+  });
+  document.querySelectorAll('.tdel').forEach(el=>el.onclick=async()=>{
+    todoCache[todayISO]=todoCache[todayISO].filter(x=>x.id!==el.dataset.id);await saveTodos();render();
+  });
+  const addFn=async()=>{
+    const inp=document.getElementById('newTodo');const v=inp?.value.trim();if(!v)return;
+    todoCache[todayISO].push({id:uid(),text:v,done:false});await saveTodos();render();
+  };
+  document.getElementById('addTodo')?.addEventListener('click',addFn);
+  document.getElementById('newTodo')?.addEventListener('keydown',e=>{if(e.key==='Enter')addFn();});
+}
+
+/* init */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{tab=t.dataset.t;render();});
+const now=new Date();
+const wd=['일','월','화','수','목','금','토'];
+document.getElementById('hdrDate').textContent=`${now.getFullYear()}. ${now.getMonth()+1}. ${now.getDate()} (${wd[now.getDay()]})`;
+render();
+</script>
+</body>
+</html>
