@@ -434,8 +434,8 @@ async function renderWeekly(p){
     </div>
     <button class="today-btn" id="wkToday">이번 주로</button>
     <div class="sec">📅 이번 주 습관 체크</div>
-    ${habits.length?cards:'<div class="empty"><div class="etit">이번 주 습관을 추가해보세요 🌿</div></div>'}
     <button class="add-habit" id="addHabit">+ 습관 추가</button>
+    ${habits.length?cards:'<div class="empty"><div class="etit">이번 주 습관을 추가해보세요 🌿</div></div>'}
   </div>`;
   bindWeekly();
 }
@@ -534,4 +534,5 @@ render();
 </script>
 </body>
 </html>
+ 
  
