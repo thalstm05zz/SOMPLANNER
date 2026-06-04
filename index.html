@@ -24,12 +24,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
     radial-gradient(ellipse at 90% 100%,rgba(255,217,61,.12),transparent 50%);
   color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:calc(120px + env(safe-area-inset-bottom));min-height:100%;}
 .wrap{max-width:520px;margin:0 auto;padding:0 16px;}
- 
+
 /* header */
 .hdr{padding:26px 16px 10px;max-width:520px;margin:0 auto;}
 .hdr-date{font-size:12px;color:var(--lime-d);font-weight:700;letter-spacing:.5px;margin-bottom:2px;}
 .hdr-title{font-family:'Jua',sans-serif;font-size:25px;color:var(--ink);}
- 
+
 /* tabs */
 .tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;
   border-top:1.5px solid var(--line);box-shadow:0 -4px 20px -8px rgba(30,58,30,.15);
@@ -39,13 +39,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .tab .ico{font-size:20px;transition:.15s;}
 .tab.on{color:var(--lime-d);}
 .tab.on .ico{transform:scale(1.15);}
- 
+
 /* section */
 .sec{display:flex;align-items:center;gap:8px;margin:22px 0 12px;
   font-family:'Jua',sans-serif;font-size:16px;color:var(--ink);}
 .sec::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,var(--line),transparent);}
 .sec small{font-family:'Noto Sans KR';font-size:11px;font-weight:400;color:var(--muted);}
- 
+
 /* nav */
 .nav{display:flex;align-items:center;justify-content:space-between;
   background:var(--card);border:1.5px solid var(--line);border-radius:18px;
@@ -58,7 +58,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .navbtn:active{background:var(--lime-s);}
 .today-btn{display:block;margin:8px auto 0;border:none;background:none;
   color:var(--lime-d);font-size:11.5px;font-weight:700;cursor:pointer;}
- 
+
 /* monthly goal card */
 .gcard{background:var(--card);border:1.5px solid var(--line);border-radius:22px;
   margin-bottom:14px;box-shadow:var(--sh);overflow:hidden;animation:pop .25s ease;}
@@ -88,7 +88,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .pbar i{display:block;height:100%;border-radius:6px;
   background:linear-gradient(90deg,var(--lime),var(--lime-d));transition:width .5s cubic-bezier(.34,1.56,.64,1);}
 .pct-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;}
- 
+
 /* log section in goal card */
 .log-sec{padding:12px 16px;background:var(--paper);border-top:1px solid var(--line);}
 .log-sec .lhd{font-size:12px;font-weight:700;color:var(--ink-s);margin-bottom:9px;}
@@ -108,14 +108,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .lhitem .lhdate{color:var(--muted);font-size:11.5px;flex:none;}
 .lhitem .lhval{flex:1;font-weight:700;}
 .lhitem .lhdel{color:var(--muted);cursor:pointer;font-size:15px;opacity:.5;}
- 
+
 /* add goal btns */
 .add-goal-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
 .add-goal-btn{flex:1;min-width:80px;border:2px dashed var(--line);background:rgba(255,255,255,.7);
   border-radius:16px;padding:12px 8px;font-size:12.5px;font-weight:700;color:var(--lime-d);
   font-family:'Noto Sans KR';cursor:pointer;}
 .add-goal-btn:active{background:var(--lime-s);}
- 
+
 /* weekly habit */
 .habit{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
   padding:14px 14px 12px;margin-bottom:10px;box-shadow:var(--sh);animation:pop .2s ease;}
@@ -139,7 +139,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
   border-radius:16px;padding:13px;font-size:13px;font-weight:700;color:var(--lime-d);
   font-family:'Noto Sans KR';cursor:pointer;}
 .add-habit:active{background:var(--lime-s);}
- 
+
 /* daily todo */
 .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
 .qbtn{border:2px solid var(--lime);background:var(--lime-s);border-radius:20px;
@@ -162,7 +162,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .add-row button{border:none;background:var(--lime);color:#fff;border-radius:14px;
   padding:0 20px;font-size:22px;cursor:pointer;}
 .add-row button:active{background:var(--lime-d);}
- 
+
 /* empty */
 .empty{text-align:center;color:var(--muted);padding:28px 0;
   border:2px dashed var(--line);border-radius:16px;margin-bottom:10px;}
@@ -172,7 +172,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
   background:var(--ink);color:#fff;padding:11px 20px;border-radius:22px;font-size:13px;
   opacity:0;transition:.25s;z-index:60;pointer-events:none;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
- 
+
 /* memo */
 .memo-card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
   padding:14px 16px;margin-bottom:4px;box-shadow:var(--sh);
@@ -194,7 +194,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
   <div class="tab" data-t="monthly"><span class="ico">🎯</span>월간</div>
 </nav>
 <div class="toast" id="toast"></div>
- 
+
 <script>
 const store = {
   async get(key) {
@@ -213,7 +213,7 @@ let monthRef=startOfMonth(new Date());
 let weekMon=getMonday(new Date());
 const todayISO=iso(new Date());
 const goalCache={},habitCache={},todoCache={};
- 
+
 function iso(d){return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
 function p(n){return String(n).padStart(2,'0');}
 function ym(d){return d.getFullYear()+'-'+p(d.getMonth()+1);}
@@ -226,7 +226,7 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 function fmt(n,unit){n=+n||0;if(unit&&unit.includes('원'))return Math.round(n).toLocaleString('ko-KR');return(Math.round(n*10)/10).toLocaleString('ko-KR');}
 function esc(s){return(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1600);}
- 
+
 async function ensureGoals(k){
   if(goalCache[k])return goalCache[k];
   try{const r=await store.get('g:'+k);goalCache[k]=r?JSON.parse(r.value):[];}catch(e){goalCache[k]=[];}
@@ -260,7 +260,7 @@ async function ensureTodos(){
   return todoCache[todayISO];
 }
 async function saveTodos(){try{await store.set('t:'+todayISO,JSON.stringify(todoCache[todayISO]));}catch(e){toast('저장 실패');}}
- 
+
 function goalStats(g,mk){
   const logs=Object.entries(g.logs||{}).filter(([d])=>ymOf(d)===mk);
   const 달성=logs.reduce((s,[,v])=>s+(+v||0),0);
@@ -271,14 +271,14 @@ function goalStats(g,mk){
   const 일일=Math.round(남은/남은일*10)/10;
   return{달성,완료,남은,남은일,일일,주간:Math.round(일일*7*10)/10,pct:t?Math.min(100,Math.round(달성/t*100)):0};
 }
- 
+
 function logHistory(g,mk){
   return Object.entries(g.logs||{})
     .filter(([d])=>ymOf(d)===mk&&+g.logs[d]>0)
     .sort(([a],[b])=>b.localeCompare(a))
     .slice(0,10);
 }
- 
+
 async function render(){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.t===tab));
   const p=document.getElementById('panel');
@@ -287,7 +287,7 @@ async function render(){
   else if(tab==='weekly')await renderWeekly(p);
   else await renderDaily(p);
 }
- 
+
 /* ── MONTHLY ── */
 async function renderMonthly(p){
   const mk=ym(monthRef);
@@ -353,7 +353,7 @@ async function renderMonthly(p){
   </div>`;
   bindMonthly(mk);
 }
- 
+
 function bindMonthly(mk){
   document.querySelectorAll('[data-mn]').forEach(b=>b.onclick=()=>{monthRef=addMonths(monthRef,+b.dataset.mn);render();});
   document.getElementById('mToday')?.addEventListener('click',()=>{monthRef=startOfMonth(new Date());render();});
@@ -404,7 +404,7 @@ function bindMonthly(mk){
     await saveGoals(mk);render();
   });
 }
- 
+
 /* ── WEEKLY ── */
 async function renderWeekly(p){
   const sun=addDays(weekMon,6);
@@ -461,7 +461,7 @@ function bindWeekly(){
     setTimeout(()=>{const e=document.querySelectorAll('.htx');e.length&&e[e.length-1].focus();},30);
   });
 }
- 
+
 /* ── DAILY ── */
 async function loadMemo(){
   try{const r=await store.get('memo:'+todayISO);return r?JSON.parse(r.value):'';}
@@ -492,12 +492,12 @@ async function renderDaily(p){
       ${QUICK.map(q=>`<button class="qbtn" data-q="${q}">+ ${q}</button>`).join('')}
       <button class="qbtn y" id="qCustom">+ 직접 입력</button>
     </div>
-    ${todoHTML||'<div class="empty"><div class="etit">오늘 할 일을 추가해봐요 ☀️</div><div>위 버튼을 탭하거나 직접 입력해요</div></div>'}
     <div class="add-row">
       <input id="newTodo" placeholder="할 일 추가하기...">
       <button id="addTodo">+</button>
-    <div style="height:160px"></div>
     </div>
+    ${todoHTML||'<div class="empty"><div class="etit">오늘 할 일을 추가해봐요 ☀️</div><div>위 버튼을 탭하거나 직접 입력해요</div></div>'}
+    <div style="height:160px"></div>
   </div>`;
   bindDaily();
 }
@@ -526,7 +526,7 @@ function bindDaily(){
   document.getElementById('addTodo')?.addEventListener('click',addFn);
   document.getElementById('newTodo')?.addEventListener('keydown',e=>{if(e.key==='Enter')addFn();});
 }
- 
+
 /* init */
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{tab=t.dataset.t;render();});
 const now=new Date();
@@ -536,4 +536,3 @@ render();
 </script>
 </body>
 </html>
- 
