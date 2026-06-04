@@ -180,6 +180,28 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .memo-txt{font-size:14.5px;line-height:1.7;outline:none;min-height:36px;
   color:var(--ink);white-space:pre-wrap;word-break:break-all;}
 .memo-txt:empty:before{content:'오늘의 다짐이나 메모를 적어보세요 🌿';color:var(--muted);font-size:13.5px;}
+
+/* numeric input card in daily */
+.ncard{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+  padding:0 0 14px;margin-bottom:10px;box-shadow:var(--sh);overflow:hidden;position:relative;}
+.ncard .nbar{height:4px;background:linear-gradient(90deg,var(--lime),var(--mint));margin-bottom:13px;}
+.ncard.c2 .nbar{background:linear-gradient(90deg,var(--coral),var(--sun));}
+.ncard .ninner{padding:0 15px;}
+.ncard .ntop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.ncard .nname{font-family:'Jua',sans-serif;font-size:16px;}
+.ncard .nbadge{font-size:11px;font-weight:700;background:var(--lime-s);color:var(--lime-d);padding:3px 9px;border-radius:20px;}
+.ncard.c2 .nbadge{background:var(--coral-s);color:#C53030;}
+.ncard .nstats{display:flex;gap:7px;margin-bottom:11px;}
+.ncard .nst{flex:1;background:var(--paper);border-radius:10px;padding:7px 9px;}
+.ncard .nst .t{font-size:10px;color:var(--muted);margin-bottom:2px;}
+.ncard .nst .v{font-size:12.5px;font-weight:700;color:var(--ink-s);}
+.ncard .nrow{display:flex;align-items:center;gap:8px;}
+.ncard .nrow input{flex:1;border:2px solid var(--line);border-radius:12px;
+  padding:11px 13px;font-size:15px;font-family:'Noto Sans KR';
+  outline:none;background:var(--paper);color:var(--ink);}
+.ncard .nrow input:focus{border-color:var(--lime);background:#fff;}
+.ncard.c2 .nrow input:focus{border-color:var(--coral);}
+.ncard .nrow .nu{font-size:13px;font-weight:600;color:var(--muted);}
 </style>
 </head>
 <body>
@@ -484,16 +506,27 @@ async function renderDaily(p){
       <div class="ttx">${esc(t.text)}</div>
       <div class="tdel" data-id="${t.id}">×</div>
     </div>`).join('');
-  const ncards=goals.map(g=>{
+  const ncards=goals.map((g,idx)=>{
     const s=goalStats(g,mk);
     const val=(g.logs&&g.logs[todayISO]!=null&&g.logs[todayISO]!=='')?g.logs[todayISO]:'';
-    return`<div class="ncard">
-      <div class="ni">
-        <div class="nname">${esc(g.name)}</div>
-        <div class="nleft">남은 <span>${fmt(s.남은,g.unit)} ${esc(g.unit||'')}</span> · 일일 권장 <span>${fmt(s.일일,g.unit)} ${esc(g.unit||'')}</span></div>
+    const cl=idx%2===1?'c2':'';
+    return`<div class="ncard ${cl}">
+      <div class="nbar"></div>
+      <div class="ninner">
+        <div class="ntop">
+          <div class="nname">${esc(g.name)}</div>
+          <span class="nbadge">${s.pct}%</span>
+        </div>
+        <div class="nstats">
+          <div class="nst"><div class="t">남은 목표</div><div class="v">${fmt(s.남은,g.unit)} ${esc(g.unit||'')}</div></div>
+          <div class="nst"><div class="t">남은 목표일수</div><div class="v">${s.남은일}일</div></div>
+          <div class="nst"><div class="t">일일 권장</div><div class="v">${fmt(s.일일,g.unit)} ${esc(g.unit||'')}</div></div>
+        </div>
+        <div class="nrow">
+          <input type="number" inputmode="decimal" value="${val}" placeholder="오늘 기록" data-ngid="${g.id}">
+          <span class="nu">${esc(g.unit||'')}</span>
+        </div>
       </div>
-      <input type="number" inputmode="decimal" value="${val}" placeholder="0" data-ngid="${g.id}">
-      <span class="nunit">${esc(g.unit||'')}</span>
     </div>`;
   }).join('');
   p.innerHTML=`<div class="wrap">
@@ -534,8 +567,16 @@ function bindDaily(mk){
       await saveGoals(mk);
       // refresh remaining display
       const s=goalStats(g,mk);
-      const nleft=inp.closest('.ncard')?.querySelector('.nleft');
-      if(nleft)nleft.innerHTML=`남은 <span>${fmt(s.남은,g.unit)} ${esc(g.unit||'')}</span> · 일일 권장 <span>${fmt(s.일일,g.unit)} ${esc(g.unit||'')}</span>`;
+      // refresh stat boxes
+      const card=inp.closest('.ncard');
+      if(card){
+        const sts=card.querySelectorAll('.nst .v');
+        if(sts[0])sts[0].textContent=fmt(s.남은,g.unit)+' '+(g.unit||'');
+        if(sts[1])sts[1].textContent=s.남은일+'일';
+        if(sts[2])sts[2].textContent=fmt(s.일일,g.unit)+' '+(g.unit||'');
+        const badge=card.querySelector('.nbadge');
+        if(badge)badge.textContent=s.pct+'%';
+      }
     };
   });
   document.querySelectorAll('.qbtn:not(.y)').forEach(b=>b.onclick=async()=>{
