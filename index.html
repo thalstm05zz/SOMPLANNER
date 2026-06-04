@@ -185,7 +185,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 <body>
 <div class="hdr">
   <div class="hdr-date" id="hdrDate"></div>
-  <div class="hdr-title">🌿 나의 플래너</div>
+  <div class="hdr-title">🌿 솜플래너</div>
 </div>
 <div id="panel"><div class="loading">불러오는 중 🌱</div></div>
 <nav class="tabs">
@@ -473,6 +473,8 @@ async function saveMemo(text){
 async function renderDaily(p){
   const todos=await ensureTodos();
   const memo=await loadMemo();
+  const mk=ym(new Date());
+  const goals=await ensureGoals(mk);
   const done=todos.filter(t=>t.done).length;
   const undone=todos.filter(t=>!t.done);
   const doneList=todos.filter(t=>t.done);
@@ -482,11 +484,24 @@ async function renderDaily(p){
       <div class="ttx">${esc(t.text)}</div>
       <div class="tdel" data-id="${t.id}">×</div>
     </div>`).join('');
+  const ncards=goals.map(g=>{
+    const s=goalStats(g,mk);
+    const val=(g.logs&&g.logs[todayISO]!=null&&g.logs[todayISO]!=='')?g.logs[todayISO]:'';
+    return`<div class="ncard">
+      <div class="ni">
+        <div class="nname">${esc(g.name)}</div>
+        <div class="nleft">남은 <span>${fmt(s.남은,g.unit)} ${esc(g.unit||'')}</span> · 일일 권장 <span>${fmt(s.일일,g.unit)} ${esc(g.unit||'')}</span></div>
+      </div>
+      <input type="number" inputmode="decimal" value="${val}" placeholder="0" data-ngid="${g.id}">
+      <span class="nunit">${esc(g.unit||'')}</span>
+    </div>`;
+  }).join('');
   p.innerHTML=`<div class="wrap">
     <div class="sec">🌿 오늘의 다짐</div>
     <div class="memo-card">
       <div class="memo-txt" id="memoTxt" contenteditable="true">${esc(memo)}</div>
     </div>
+    ${goals.length?`<div class="sec">📊 오늘 기록 <small>입력하면 월간 자동 반영</small></div>${ncards}`:''}
     <div class="sec">✅ 오늘 할 일 <small>${done>0?done+'개 완료':''}</small></div>
     <div class="quick-row">
       ${QUICK.map(q=>`<button class="qbtn" data-q="${q}">+ ${q}</button>`).join('')}
@@ -499,14 +514,30 @@ async function renderDaily(p){
     ${todoHTML||'<div class="empty"><div class="etit">오늘 할 일을 추가해봐요 ☀️</div><div>위 버튼을 탭하거나 직접 입력해요</div></div>'}
     <div style="height:160px"></div>
   </div>`;
-  bindDaily();
+  bindDaily(mk);
 }
-function bindDaily(){
+function bindDaily(mk){
   const memoEl=document.getElementById('memoTxt');
   if(memoEl){
     memoEl.onblur=async()=>await saveMemo(memoEl.innerText.trim());
     memoEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();memoEl.blur();}});
   }
+  // numeric goal inputs
+  document.querySelectorAll('[data-ngid]').forEach(inp=>{
+    inp.onchange=async()=>{
+      const g=(goalCache[mk]||[]).find(x=>x.id===inp.dataset.ngid);
+      if(!g)return;
+      if(!g.logs)g.logs={};
+      const v=inp.value.trim();
+      if(v===''||+v===0)delete g.logs[todayISO];
+      else g.logs[todayISO]=parseFloat(v)||0;
+      await saveGoals(mk);
+      // refresh remaining display
+      const s=goalStats(g,mk);
+      const nleft=inp.closest('.ncard')?.querySelector('.nleft');
+      if(nleft)nleft.innerHTML=`남은 <span>${fmt(s.남은,g.unit)} ${esc(g.unit||'')}</span> · 일일 권장 <span>${fmt(s.일일,g.unit)} ${esc(g.unit||'')}</span>`;
+    };
+  });
   document.querySelectorAll('.qbtn:not(.y)').forEach(b=>b.onclick=async()=>{
     if(todoCache[todayISO].some(t=>t.text===b.dataset.q&&!t.done)){toast('이미 있어요!');return;}
     todoCache[todayISO].push({id:uid(),text:b.dataset.q,done:false});
