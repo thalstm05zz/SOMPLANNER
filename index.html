@@ -234,6 +234,7 @@ let tab='daily';
 let monthRef=startOfMonth(new Date());
 let weekMon=getMonday(new Date());
 const todayISO=iso(new Date());
+let selectedDay=todayISO;
 const goalCache={},habitCache={},todoCache={};
 
 function iso(d){return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
@@ -485,17 +486,19 @@ function bindWeekly(){
 }
 
 /* ── DAILY ── */
-async function loadMemo(){
-  try{const r=await store.get('memo:'+todayISO);return r?JSON.parse(r.value):'';}
+async function loadMemo(d){
+  d=d||selectedDay;
+  try{const r=await store.get('memo:'+d);return r?JSON.parse(r.value):'';}
   catch(e){return '';}
 }
-async function saveMemo(text){
-  try{await store.set('memo:'+todayISO,JSON.stringify(text));}catch(e){}
+async function saveMemo(text,d){
+  d=d||selectedDay;
+  try{await store.set('memo:'+d,JSON.stringify(text));}catch(e){}
 }
 async function renderDaily(p){
-  const todos=await ensureTodos();
-  const memo=await loadMemo();
-  const mk=ym(new Date());
+  const todos=await ensureTodos(selectedDay);
+  const memo=await loadMemo(selectedDay);
+  const mk=ymOf(selectedDay);
   const goals=await ensureGoals(mk);
   const done=todos.filter(t=>t.done).length;
   const undone=todos.filter(t=>!t.done);
@@ -508,7 +511,7 @@ async function renderDaily(p){
     </div>`).join('');
   const ncards=goals.map((g,idx)=>{
     const s=goalStats(g,mk);
-    const val=(g.logs&&g.logs[todayISO]!=null&&g.logs[todayISO]!=='')?g.logs[todayISO]:'';
+    const val=(g.logs&&g.logs[selectedDay]!=null&&g.logs[selectedDay]!=='')?g.logs[selectedDay]:'';
     const cl=idx%2===1?'c2':'';
     return`<div class="ncard ${cl}">
       <div class="nbar"></div>
@@ -529,13 +532,24 @@ async function renderDaily(p){
       </div>
     </div>`;
   }).join('');
+  const sd=new Date(selectedDay+'T00:00:00');
+  const wd2=['일','월','화','수','목','금','토'];
+  const isToday=selectedDay===todayISO;
+  const dayLabel=isToday?'오늘':`${sd.getMonth()+1}/${sd.getDate()}(${wd2[sd.getDay()]})`;
   p.innerHTML=`<div class="wrap">
-    <div class="sec">🌿 오늘의 다짐</div>
+    <div class="nav">
+      <button class="navbtn" data-dn="-1">‹</button>
+      <div class="lbl"><div class="range">${dayLabel}</div>
+      <div class="meta">${sd.getFullYear()}년 ${sd.getMonth()+1}월 ${sd.getDate()}일</div></div>
+      <button class="navbtn" data-dn="1">›</button>
+    </div>
+    ${!isToday?`<button class="today-btn" id="goToday">오늘로</button>`:''}
+    <div class="sec">🌿 ${isToday?'오늘의':'이날의'} 다짐</div>
     <div class="memo-card">
       <div class="memo-txt" id="memoTxt" contenteditable="true">${esc(memo)}</div>
     </div>
     ${goals.length?`<div class="sec">📊 오늘 기록 <small>입력하면 월간 자동 반영</small></div>${ncards}`:''}
-    <div class="sec">✅ 오늘 할 일 <small>${done>0?done+'개 완료':''}</small></div>
+    <div class="sec">✅ ${isToday?'오늘':dayLabel} 할 일 <small>${done>0?done+'개 완료':''}</small></div>
     <div class="quick-row">
       ${QUICK.map(q=>`<button class="qbtn" data-q="${q}">+ ${q}</button>`).join('')}
       <button class="qbtn y" id="qCustom">+ 직접 입력</button>
@@ -550,9 +564,16 @@ async function renderDaily(p){
   bindDaily(mk);
 }
 function bindDaily(mk){
+  // day navigation
+  document.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{
+    const d=new Date(selectedDay+'T00:00:00');
+    d.setDate(d.getDate()+(+b.dataset.dn));
+    selectedDay=iso(d);render();
+  });
+  document.getElementById('goToday')?.addEventListener('click',()=>{selectedDay=todayISO;render();});
   const memoEl=document.getElementById('memoTxt');
   if(memoEl){
-    memoEl.onblur=async()=>await saveMemo(memoEl.innerText.trim());
+    memoEl.onblur=async()=>await saveMemo(memoEl.innerText.trim(),selectedDay);
     memoEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();memoEl.blur();}});
   }
   // numeric goal inputs
@@ -562,8 +583,8 @@ function bindDaily(mk){
       if(!g)return;
       if(!g.logs)g.logs={};
       const v=inp.value.trim();
-      if(v===''||+v===0)delete g.logs[todayISO];
-      else g.logs[todayISO]=parseFloat(v)||0;
+      if(v===''||+v===0)delete g.logs[selectedDay];
+      else g.logs[selectedDay]=parseFloat(v)||0;
       await saveGoals(mk);
       // refresh remaining display
       const s=goalStats(g,mk);
@@ -580,20 +601,20 @@ function bindDaily(mk){
     };
   });
   document.querySelectorAll('.qbtn:not(.y)').forEach(b=>b.onclick=async()=>{
-    if(todoCache[todayISO].some(t=>t.text===b.dataset.q&&!t.done)){toast('이미 있어요!');return;}
-    todoCache[todayISO].push({id:uid(),text:b.dataset.q,done:false});
-    await saveTodos();render();
+    if(todoCache[selectedDay].some(t=>t.text===b.dataset.q&&!t.done)){toast('이미 있어요!');return;}
+    todoCache[selectedDay].push({id:uid(),text:b.dataset.q,done:false});
+    await saveTodos(selectedDay);render();
   });
   document.getElementById('qCustom')?.addEventListener('click',()=>document.getElementById('newTodo')?.focus());
   document.querySelectorAll('.tck').forEach(el=>el.onclick=async()=>{
-    const t=todoCache[todayISO].find(x=>x.id===el.dataset.id);if(t){t.done=!t.done;await saveTodos();render();}
+    const t=todoCache[selectedDay].find(x=>x.id===el.dataset.id);if(t){t.done=!t.done;await saveTodos(selectedDay);render();}
   });
   document.querySelectorAll('.tdel').forEach(el=>el.onclick=async()=>{
-    todoCache[todayISO]=todoCache[todayISO].filter(x=>x.id!==el.dataset.id);await saveTodos();render();
+    todoCache[selectedDay]=todoCache[selectedDay].filter(x=>x.id!==el.dataset.id);await saveTodos(selectedDay);render();
   });
   const addFn=async()=>{
     const inp=document.getElementById('newTodo');const v=inp?.value.trim();if(!v)return;
-    todoCache[todayISO].push({id:uid(),text:v,done:false});await saveTodos();render();
+    todoCache[selectedDay].push({id:uid(),text:v,done:false});await saveTodos(selectedDay);render();
   };
   document.getElementById('addTodo')?.addEventListener('click',addFn);
   document.getElementById('newTodo')?.addEventListener('keydown',e=>{if(e.key==='Enter')addFn();});
