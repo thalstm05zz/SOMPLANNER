@@ -286,6 +286,17 @@ async function saveTodos(d,todos){
   catch(e){toast('저장 실패');}
 }
 
+function goalStats(g,mk){
+  const logs=Object.entries(g.logs||{}).filter(([d])=>ymOf(d)===mk);
+  const 달성=logs.reduce((s,[,v])=>s+(+v||0),0);
+  const 완료=logs.filter(([,v])=>+v>0).length;
+  const t=+g.target||0,td=+g.targetDays||30;
+  const 남은=Math.max(0,t-달성);
+  const 남은일=Math.max(1,td-완료);
+  const 일일=Math.round(남은/남은일*10)/10;
+  return{달성,완료,남은,남은일,일일,주간:Math.round(일일*7*10)/10,pct:t?Math.min(100,Math.round(달성/t*100)):0};
+}
+
 function logHistory(g,mk){
   return Object.entries(g.logs||{})
     .filter(([d])=>ymOf(d)===mk&&+g.logs[d]>0)
