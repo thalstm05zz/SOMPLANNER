@@ -173,6 +173,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
   opacity:0;transition:.25s;z-index:60;pointer-events:none;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 
+/* disable spellcheck globally */
+[contenteditable]{-webkit-user-modify:read-write-plaintext-only;}
+
 /* memo */
 .memo-card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
   padding:14px 16px;margin-bottom:4px;box-shadow:var(--sh);
@@ -229,7 +232,7 @@ const store = {
   }
 };
 const DOW=['월','화','수','목','금','토','일'];
-const QUICK=['독서 30분','일기 쓰기','운동','줄넘기'];
+const QUICK=['독서 30분','일기 쓰기','운동'];
 let tab='daily';
 let monthRef=startOfMonth(new Date());
 let weekMon=getMonday(new Date());
@@ -270,7 +273,7 @@ async function ensureHabits(){
   try{const r=await store.get('h:'+k);habitCache[k]=r?JSON.parse(r.value):[];}catch(e){habitCache[k]=[];}
   if(!Array.isArray(habitCache[k]))habitCache[k]=[];
   if(!habitCache[k].length){
-    habitCache[k]=[{id:uid(),text:'독서',checks:[0,0,0,0,0,0,0]},{id:uid(),text:'운동',checks:[0,0,0,0,0,0,0]},{id:uid(),text:'줄넘기',checks:[0,0,0,0,0,0,0]}];
+    habitCache[k]=[{id:uid(),text:'독서',checks:[0,0,0,0,0,0,0]},{id:uid(),text:'운동',checks:[0,0,0,0,0,0,0]}];
     await saveHabits();
   }
   return habitCache[k];
@@ -326,8 +329,8 @@ async function renderMonthly(p){
       </div>`).join('');
     return`<div class="gcard">
       <div class="gcard-top">
-        <div class="gname" contenteditable="true" data-gid="${g.id}" data-f="name">${esc(g.name)}</div>
-        <div class="gunit" contenteditable="true" data-gid="${g.id}" data-f="unit">${esc(g.unit||'')}</div>
+        <div class="gname" contenteditable="true" spellcheck="false" data-gid="${g.id}" data-f="name">${esc(g.name)}</div>
+        <div class="gunit" contenteditable="true" spellcheck="false" data-gid="${g.id}" data-f="unit">${esc(g.unit||'')}</div>
         <span class="gdel" data-gid="${g.id}">×</span>
       </div>
       <div class="gcard-set">
@@ -442,7 +445,7 @@ async function renderWeekly(p){
       </div>`).join('');
     return`<div class="habit">
       <div class="habit-top">
-        <div class="htx" contenteditable="true" data-hid="${h.id}">${esc(h.text)}</div>
+        <div class="htx" contenteditable="true" spellcheck="false" data-hid="${h.id}">${esc(h.text)}</div>
         <span class="hdel" data-hid="${h.id}">×</span>
       </div>
       <div class="days">${days}</div>
@@ -546,7 +549,7 @@ async function renderDaily(p){
     ${!isToday?`<button class="today-btn" id="goToday">오늘로</button>`:''}
     <div class="sec">🌿 ${isToday?'오늘의':'이날의'} 다짐</div>
     <div class="memo-card">
-      <div class="memo-txt" id="memoTxt" contenteditable="true">${esc(memo)}</div>
+      <div class="memo-txt" id="memoTxt" contenteditable="true" spellcheck="false">${esc(memo)}</div>
     </div>
     ${goals.length?`<div class="sec">📊 오늘 기록 <small>입력하면 월간 자동 반영</small></div>${ncards}`:''}
     <div class="sec">✅ ${isToday?'오늘':dayLabel} 할 일 <small>${done>0?done+'개 완료':''}</small></div>
@@ -555,7 +558,7 @@ async function renderDaily(p){
       <button class="qbtn y" id="qCustom">+ 직접 입력</button>
     </div>
     <div class="add-row">
-      <input id="newTodo" placeholder="할 일 추가하기...">
+      <input id="newTodo" placeholder="할 일 추가하기..." spellcheck="false" autocorrect="off" autocomplete="off">
       <button id="addTodo">+</button>
     </div>
     ${todoHTML||'<div class="empty"><div class="etit">오늘 할 일을 추가해봐요 ☀️</div><div>위 버튼을 탭하거나 직접 입력해요</div></div>'}
@@ -568,9 +571,14 @@ function bindDaily(mk){
   document.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{
     const d=new Date(selectedDay+'T00:00:00');
     d.setDate(d.getDate()+(+b.dataset.dn));
-    selectedDay=iso(d);render();
+    const newDay=iso(d);
+    delete todoCache[newDay];
+    selectedDay=newDay;render();
   });
-  document.getElementById('goToday')?.addEventListener('click',()=>{selectedDay=todayISO;render();});
+  document.getElementById('goToday')?.addEventListener('click',()=>{
+    delete todoCache[todayISO];
+    selectedDay=todayISO;render();
+  });
   const memoEl=document.getElementById('memoTxt');
   if(memoEl){
     memoEl.onblur=async()=>await saveMemo(memoEl.innerText.trim(),selectedDay);
