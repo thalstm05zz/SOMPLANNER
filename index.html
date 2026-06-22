@@ -6,66 +6,73 @@
 <title>솜플래너 🌿</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nanum+Gothic:wght@400;700&family=Nanum+Gothic+Coding&display=swap" rel="stylesheet">
 <style>
 :root{
-  --lime:#6FCF2D;--lime-d:#4EA818;--lime-s:#EEFAD5;
-  --sun:#FFD93D;--sun-s:#FFF8D0;
-  --coral:#FF6B6B;--coral-s:#FFE8E8;
-  --mint:#38D9A9;--mint-s:#D3F9EF;
-  --paper:#F7FEF0;--card:#FFFFFF;
-  --ink:#1E3A1E;--ink-s:#4A6849;--muted:#8EA88C;--line:#E4F0D8;
-  --sh:0 2px 12px -4px rgba(30,58,30,.10);
+  --peach:#F2A080;--peach-d:#D4795F;--peach-s:#FDF0E8;
+  --cherry:#C4726A;--cherry-d:#A85850;--cherry-s:#FAE8E6;
+  --sage:#8AAF82;--sage-d:#6A9262;--sage-s:#EBF3E8;
+  --cream:#FDF6EE;--card:#FFFCF8;
+  --ink:#3D2B1F;--ink-s:#7A6358;--muted:#B8A090;--line:#EDD9C8;
+  --sh:0 2px 14px -4px rgba(61,43,31,.10);
+  /* aliases for existing code */
+  --lime:var(--sage);--lime-d:var(--sage-d);--lime-s:var(--sage-s);
+  --sun:var(--peach);--sun-s:var(--peach-s);
+  --coral:var(--cherry);--coral-s:var(--cherry-s);
+  --mint:var(--sage);--mint-s:var(--sage-s);
+  --paper:var(--cream);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overscroll-behavior:none;}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
-  background-image:radial-gradient(ellipse at 10% 0%,rgba(111,207,45,.10),transparent 50%),
-    radial-gradient(ellipse at 90% 100%,rgba(255,217,61,.12),transparent 50%);
+body{font-family:'Nanum Gothic',sans-serif;background: linear-gradient(170deg,
+    #fef3ec 0%,
+    #fdf8f2 30%,
+    #fdf4f0 60%,
+    #fbeae8 100%) fixed;
   color:var(--ink);-webkit-font-smoothing:antialiased;padding-bottom:calc(120px + env(safe-area-inset-bottom));min-height:100%;}
 .wrap{max-width:520px;margin:0 auto;padding:0 16px;}
 
 /* header */
 .hdr{padding:26px 16px 10px;max-width:520px;margin:0 auto;}
 .hdr-date{font-size:12px;color:var(--lime-d);font-weight:700;letter-spacing:.5px;margin-bottom:2px;}
-.hdr-title{font-family:'Jua',sans-serif;font-size:25px;color:var(--ink);}
+.hdr-title{font-family:'Gaegu',cursive;font-size:25px;color:var(--ink);}
 
 /* tabs */
 .tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;
-  border-top:1.5px solid var(--line);box-shadow:0 -4px 20px -8px rgba(30,58,30,.15);
+  border-top:1.5px solid var(--line);box-shadow:0 -4px 20px -8px rgba(61,43,31,.12);
   z-index:50;padding-bottom:env(safe-area-inset-bottom);}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
   padding:10px 0 9px;cursor:pointer;color:var(--muted);font-size:10.5px;font-weight:500;}
 .tab .ico{font-size:20px;transition:.15s;}
-.tab.on{color:var(--lime-d);}
+.tab.on{color:var(--cherry);}
 .tab.on .ico{transform:scale(1.15);}
 
 /* section */
 .sec{display:flex;align-items:center;gap:8px;margin:22px 0 12px;
-  font-family:'Jua',sans-serif;font-size:16px;color:var(--ink);}
+  font-family:'Gaegu',cursive;font-size:16px;color:var(--ink);}
 .sec::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,var(--line),transparent);}
-.sec small{font-family:'Noto Sans KR';font-size:11px;font-weight:400;color:var(--muted);}
+.sec small{font-family:'Nanum Gothic';font-size:11px;font-weight:400;color:var(--muted);}
 
 /* nav */
 .nav{display:flex;align-items:center;justify-content:space-between;
-  background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+  background:var(--card);border:1.5px solid var(--line);border-radius:22px;
   padding:10px 12px;box-shadow:var(--sh);margin-bottom:4px;}
-.nav .range{font-family:'Jua',sans-serif;font-size:16px;}
+.nav .range{font-family:'Gaegu',cursive;font-size:16px;}
 .nav .meta{font-size:11px;color:var(--muted);margin-top:1px;}
 .navbtn{width:36px;height:36px;border-radius:12px;border:1.5px solid var(--line);
   background:var(--paper);color:var(--ink-s);font-size:16px;
   display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .navbtn:active{background:var(--lime-s);}
 .today-btn{display:block;margin:8px auto 0;border:none;background:none;
-  color:var(--lime-d);font-size:11.5px;font-weight:700;cursor:pointer;}
+  color:var(--cherry);font-size:11.5px;font-weight:700;cursor:pointer;}
 
 /* monthly goal card */
-.gcard{background:var(--card);border:1.5px solid var(--line);border-radius:22px;
+.gcard{background:var(--card);border:1.5px solid var(--line);border-radius:28px;
   margin-bottom:14px;box-shadow:var(--sh);overflow:hidden;animation:pop .25s ease;}
 @keyframes pop{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 .gcard-top{padding:4px 16px 0;display:flex;align-items:center;gap:6px;
   border-bottom:1px solid var(--line);padding-bottom:10px;margin-top:12px;}
-.gname{font-family:'Jua',sans-serif;font-size:17px;outline:none;flex:1;}
+.gname{font-family:'Gaegu',cursive;font-size:17px;outline:none;flex:1;}
 .gname:empty:before{content:'목표 이름';color:var(--muted);}
 .gunit{font-size:12px;color:var(--muted);background:var(--paper);border:1px solid var(--line);
   border-radius:8px;padding:3px 8px;outline:none;min-width:20px;}
@@ -73,20 +80,20 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .gcard-set{display:flex;align-items:center;gap:8px;padding:10px 16px;
   font-size:12px;color:var(--ink-s);border-bottom:1px solid var(--line);flex-wrap:wrap;}
 .gcard-set input{border:1.5px solid var(--line);border-radius:10px;
-  padding:6px 8px;font-size:13px;font-family:'Noto Sans KR';outline:none;background:var(--paper);}
+  padding:6px 8px;font-size:13px;font-family:'Nanum Gothic';outline:none;background:var(--paper);}
 .gcard-set input:focus{border-color:var(--lime);}
 .gcard-set input.w80{width:80px;}
 .gcard-set input.w56{width:56px;}
 .gstats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);}
 .gstat{background:var(--card);padding:10px 14px;}
 .gstat .t{font-size:10.5px;color:var(--muted);margin-bottom:3px;}
-.gstat .v{font-family:'Jua',sans-serif;font-size:14px;}
+.gstat .v{font-family:'Gaegu',cursive;font-size:14px;}
 .gstat.hi .v{color:var(--coral);}
 .gstat.go .v{color:var(--lime-d);}
 .pbar-wrap{padding:10px 16px 6px;border-top:1px solid var(--line);}
 .pbar{height:8px;border-radius:6px;background:var(--line);overflow:hidden;}
 .pbar i{display:block;height:100%;border-radius:6px;
-  background:linear-gradient(90deg,var(--lime),var(--lime-d));transition:width .5s cubic-bezier(.34,1.56,.64,1);}
+  background:linear-gradient(90deg,var(--peach),var(--cherry));transition:width .5s cubic-bezier(.34,1.56,.64,1);}
 .pct-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;}
 
 /* log section in goal card */
@@ -94,14 +101,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .log-sec .lhd{font-size:12px;font-weight:700;color:var(--ink-s);margin-bottom:9px;}
 .log-row{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap;}
 .log-row input[type=date]{border:1.5px solid var(--line);border-radius:10px;
-  padding:7px 9px;font-size:13px;font-family:'Noto Sans KR';outline:none;background:var(--card);color:var(--ink);}
+  padding:7px 9px;font-size:13px;font-family:'Nanum Gothic';outline:none;background:var(--card);color:var(--ink);}
 .log-row input[type=number]{width:90px;border:1.5px solid var(--line);border-radius:10px;
-  padding:7px 9px;font-size:13px;font-family:'Noto Sans KR';outline:none;text-align:right;background:var(--card);}
+  padding:7px 9px;font-size:13px;font-family:'Nanum Gothic';outline:none;text-align:right;background:var(--card);}
 .log-row input:focus{border-color:var(--lime);}
 .log-row .lunit{font-size:12px;color:var(--muted);}
-.log-save{border:none;background:var(--lime);color:#fff;border-radius:10px;
-  padding:8px 16px;font-size:13px;font-weight:700;font-family:'Noto Sans KR';cursor:pointer;}
-.log-save:active{background:var(--lime-d);}
+.log-save{border:none;background:var(--cherry);color:#fff;border-radius:10px;
+  padding:8px 16px;font-size:13px;font-weight:700;font-family:'Nanum Gothic';cursor:pointer;}
+.log-save:active{background:var(--cherry-d);}
 .log-history{display:flex;flex-direction:column;gap:5px;max-height:140px;overflow-y:auto;}
 .lhitem{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);
   border-radius:10px;padding:7px 11px;font-size:13px;}
@@ -112,18 +119,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 /* add goal btns */
 .add-goal-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
 .add-goal-btn{flex:1;min-width:80px;border:2px dashed var(--line);background:rgba(255,255,255,.7);
-  border-radius:16px;padding:12px 8px;font-size:12.5px;font-weight:700;color:var(--lime-d);
-  font-family:'Noto Sans KR';cursor:pointer;text-align:center;
+  border-radius:20px;padding:12px 8px;font-size:12.5px;font-weight:700;color:var(--lime-d);
+  font-family:'Nanum Gothic';cursor:pointer;text-align:center;
   display:flex;align-items:center;justify-content:center;min-height:48px;}
 .add-goal-btn:active{background:var(--lime-s);}
 
 /* weekly habit */
-.habit{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+.habit{background:var(--card);border:1.5px solid var(--line);border-radius:22px;
   padding:14px 14px 12px;margin-bottom:10px;box-shadow:var(--sh);animation:pop .2s ease;}
 .habit-top{display:flex;align-items:center;gap:8px;margin-bottom:11px;}
 .htx{flex:1;font-size:15px;font-weight:500;outline:none;min-height:20px;}
 .htx:empty:before{content:'주간 목표 입력';color:var(--muted);font-weight:400;}
-.hcnt{font-size:12px;font-weight:700;background:var(--lime-s);color:var(--lime-d);padding:3px 9px;border-radius:20px;}
+.hcnt{font-size:12px;font-weight:700;background:var(--lime-s);color:var(--lime-d);padding:3px 9px;border-radius:24px;}
 .hcnt.full{background:var(--mint-s);color:#0B8F6A;}
 .hdel{font-size:18px;color:var(--muted);cursor:pointer;opacity:.4;}
 .days{display:flex;gap:5px;}
@@ -134,21 +141,21 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .day.today-col{background:var(--sun-s);}
 .dbox{width:28px;height:28px;border-radius:9px;border:2px solid var(--line);
   background:var(--paper);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;}
-.day.checked .dbox{background:var(--lime);border-color:var(--lime);transform:scale(1.05);}
+.day.checked .dbox{background:var(--cherry);border-color:var(--cherry-d);transform:scale(1.05);}
 .day:active .dbox{transform:scale(.88);}
-.add-habit{width:100%;border:2px dashed var(--line);background:rgba(255,255,255,.6);
-  border-radius:16px;padding:13px;font-size:13px;font-weight:700;color:var(--lime-d);
-  font-family:'Noto Sans KR';cursor:pointer;}
+.add-habit{width:100%;border:2px dashed var(--line);background:rgba(255,252,248,.8);
+  border-radius:24px;padding:13px;font-size:13px;font-weight:700;color:var(--cherry);
+  font-family:'Nanum Gothic';cursor:pointer;}
 .add-habit:active{background:var(--lime-s);}
 
 /* daily todo */
 .quick-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
-.qbtn{border:2px solid var(--lime);background:var(--lime-s);border-radius:20px;
-  padding:7px 14px;font-size:13px;font-weight:700;color:var(--lime-d);cursor:pointer;}
-.qbtn:active{background:var(--lime);color:#fff;transform:scale(.95);}
+.qbtn{border:2px solid var(--lime);background:var(--lime-s);border-radius:24px;
+  padding:7px 14px;font-size:13px;font-weight:700;color:var(--sage-d);cursor:pointer;}
+.qbtn:active{background:var(--sage);color:#fff;transform:scale(.95);}
 .qbtn.y{border-color:var(--sun);background:var(--sun-s);color:#9A6F00;}
 .todo{display:flex;align-items:center;gap:10px;background:var(--card);
-  border:1.5px solid var(--line);border-radius:14px;padding:12px 13px;
+  border:1.5px solid var(--line);border-radius:18px;padding:12px 13px;
   margin-bottom:8px;box-shadow:var(--sh);animation:pop .2s ease;}
 .tck{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex:none;
   display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#fff;transition:.12s;}
@@ -158,19 +165,19 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .tdel{color:var(--muted);font-size:18px;cursor:pointer;opacity:.4;}
 .add-row{display:flex;gap:8px;margin-top:4px;}
 .add-row input{flex:1;border:2px solid var(--line);background:var(--card);
-  border-radius:14px;padding:13px 14px;font-size:14.5px;font-family:'Noto Sans KR';outline:none;}
+  border-radius:18px;padding:13px 14px;font-size:14.5px;font-family:'Nanum Gothic';outline:none;}
 .add-row input:focus{border-color:var(--lime);}
-.add-row button{border:none;background:var(--lime);color:#fff;border-radius:14px;
+.add-row button{border:none;background:var(--cherry);color:#fff;border-radius:22px;
   padding:0 20px;font-size:22px;cursor:pointer;}
-.add-row button:active{background:var(--lime-d);}
+.add-row button:active{background:var(--cherry-d);}
 
 /* empty */
 .empty{text-align:center;color:var(--muted);padding:28px 0;
-  border:2px dashed var(--line);border-radius:16px;margin-bottom:10px;}
-.empty .etit{font-family:'Jua',sans-serif;font-size:15px;color:var(--ink-s);margin-bottom:5px;}
+  border:2px dashed var(--line);border-radius:20px;margin-bottom:10px;}
+.empty .etit{font-family:'Gaegu',cursive;font-size:15px;color:var(--ink-s);margin-bottom:5px;}
 .loading{text-align:center;color:var(--muted);padding:50px 0;font-size:13px;}
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(16px);
-  background:var(--ink);color:#fff;padding:11px 20px;border-radius:22px;font-size:13px;
+  background:var(--ink);color:#fff;padding:11px 20px;border-radius:28px;font-size:13px;
   opacity:0;transition:.25s;z-index:60;pointer-events:none;}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -178,22 +185,22 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 [contenteditable]{-webkit-user-modify:read-write-plaintext-only;}
 
 /* memo */
-.memo-card{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+.memo-card{background:var(--card);border:1.5px solid var(--line);border-radius:22px;
   padding:14px 16px;margin-bottom:4px;box-shadow:var(--sh);
-  background:linear-gradient(135deg,#fffef7,#f7fef0);}
+  background:linear-gradient(135deg,#fffcf8,#fdf5ee);}
 .memo-txt{font-size:14.5px;line-height:1.7;outline:none;min-height:36px;
   color:var(--ink);white-space:pre-wrap;word-break:break-all;}
 .memo-txt:empty:before{content:'오늘의 다짐이나 메모를 적어보세요 🌿';color:var(--muted);font-size:13.5px;}
 
 /* numeric input card in daily */
-.ncard{background:var(--card);border:1.5px solid var(--line);border-radius:18px;
+.ncard{background:var(--card);border:1.5px solid var(--line);border-radius:22px;
   padding:0 0 14px;margin-bottom:10px;box-shadow:var(--sh);overflow:hidden;position:relative;}
 .ncard .nbar{height:4px;background:linear-gradient(90deg,var(--lime),var(--mint));margin-bottom:13px;}
 .ncard.c2 .nbar{background:linear-gradient(90deg,var(--coral),var(--sun));}
 .ncard .ninner{padding:0 15px;}
 .ncard .ntop{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.ncard .nname{font-family:'Jua',sans-serif;font-size:16px;}
-.ncard .nbadge{font-size:11px;font-weight:700;background:var(--lime-s);color:var(--lime-d);padding:3px 9px;border-radius:20px;}
+.ncard .nname{font-family:'Gaegu',cursive;font-size:16px;}
+.ncard .nbadge{font-size:11px;font-weight:700;background:var(--lime-s);color:var(--lime-d);padding:3px 9px;border-radius:24px;}
 .ncard.c2 .nbadge{background:var(--coral-s);color:#C53030;}
 .ncard .nstats{display:flex;gap:7px;margin-bottom:11px;}
 .ncard .nst{flex:1;background:var(--paper);border-radius:10px;padding:7px 9px;}
@@ -201,23 +208,65 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--paper);
 .ncard .nst .v{font-size:12.5px;font-weight:700;color:var(--ink-s);}
 .ncard .nrow{display:flex;align-items:center;gap:8px;}
 .ncard .nrow input{flex:1;border:2px solid var(--line);border-radius:12px;
-  padding:11px 13px;font-size:15px;font-family:'Noto Sans KR';
+  padding:11px 13px;font-size:15px;font-family:'Nanum Gothic';
   outline:none;background:var(--paper);color:var(--ink);}
-.ncard .nrow input:focus{border-color:var(--lime);background:#fff;}
+.ncard .nrow input:focus{border-color:var(--peach);background:#fff;}
 .ncard.c2 .nrow input:focus{border-color:var(--coral);}
 .ncard .nrow .nu{font-size:13px;font-weight:600;color:var(--muted);}
+
+/* background fruit decoration */
+.bg-fruits{
+  position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+}
+.bg-fruits span{
+  position:absolute;font-size:28px;opacity:.13;user-select:none;
+  animation:float 6s ease-in-out infinite;
+}
+.bg-fruits span:nth-child(odd){animation-direction:alternate;}
+.bg-fruits span:nth-child(3n){animation-duration:8s;}
+.bg-fruits span:nth-child(4n){animation-duration:10s;font-size:22px;}
+.bg-fruits span:nth-child(5n){font-size:34px;opacity:.09;}
+@keyframes float{
+  0%{transform:translateY(0) rotate(-5deg);}
+  100%{transform:translateY(-12px) rotate(5deg);}
+}
+.wrap{position:relative;z-index:1;}
+.hdr{position:relative;z-index:1;}
+.tabs{z-index:50;}
 </style>
 </head>
 <body>
+
+<div class="bg-fruits" aria-hidden="true">
+  <span style="top:4%;left:6%;">🍒</span>
+  <span style="top:8%;left:78%;">🍑</span>
+  <span style="top:14%;left:42%;">🌿</span>
+  <span style="top:22%;left:88%;">🍒</span>
+  <span style="top:28%;left:15%;">🍃</span>
+  <span style="top:35%;left:62%;">🍑</span>
+  <span style="top:42%;left:30%;">🌸</span>
+  <span style="top:50%;left:82%;">🍒</span>
+  <span style="top:56%;left:5%;">🍑</span>
+  <span style="top:62%;left:50%;">🌿</span>
+  <span style="top:70%;left:72%;">🍒</span>
+  <span style="top:75%;left:22%;">🍃</span>
+  <span style="top:82%;left:90%;">🍑</span>
+  <span style="top:88%;left:38%;">🌸</span>
+  <span style="top:93%;left:60%;">🍒</span>
+  <span style="top:18%;left:55%;">🍑</span>
+  <span style="top:47%;left:10%;">🌸</span>
+  <span style="top:65%;left:44%;">🍒</span>
+</div>
+
 <div class="hdr">
   <div class="hdr-date" id="hdrDate"></div>
-  <div class="hdr-title">🌿 솜플래너</div>
+  <div class="hdr-title">🍒 솜플래너</div>
 </div>
 <div id="panel"><div class="loading">불러오는 중 🌱</div></div>
 <nav class="tabs">
-  <div class="tab on" data-t="daily"><span class="ico">✅</span>일일</div>
-  <div class="tab" data-t="weekly"><span class="ico">📅</span>주간</div>
-  <div class="tab" data-t="monthly"><span class="ico">🎯</span>월간</div>
+  <div class="tab on" data-t="daily"><span class="ico">🍑</span>일일</div>
+  <div class="tab" data-t="weekly"><span class="ico">🍒</span>주간</div>
+  <div class="tab" data-t="monthly"><span class="ico">🌿</span>월간</div>
 </nav>
 <div class="toast" id="toast"></div>
 
@@ -546,7 +595,7 @@ async function renderDaily(p){
       <button class="navbtn" data-dn="1">›</button>
     </div>
     ${!isToday?`<button class="today-btn" id="goToday">오늘로</button>`:''}
-    <div class="sec">🌿 ${isToday?'오늘의':'이날의'} 다짐</div>
+    <div class="sec">🍑 ${isToday?'오늘의':'이날의'} 다짐</div>
     <div class="memo-card">
       <div class="memo-txt" id="memoTxt" contenteditable="true" spellcheck="false">${esc(memo)}</div>
     </div>
